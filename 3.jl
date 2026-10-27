@@ -22,7 +22,7 @@ function rightside!(du, u, params, t)
     k_Ab = k_Ab_bar*(1 + t/t3)*ut
 
     dT4spec_n = ν*f*(1 - e*V/(c₁+V))*s + (1 - ϕ)*(ρ₄*V)/(c₂+V)*T4spec_n - k_ν*V/(c₂+V)*T4spec_n - μ₄ₙ*T4spec_n
-    dT4spec_e = ϕ*ρ₄*V/(c₂+V)*T4spec_n - k_ν*V/(c₂+V)*T4spec_n - μ₄ₑ*T4spec_e
+    dT4spec_e = ϕ*ρ₄*V/(c₂+V)*T4spec_n - k_ν*V/(c₂+V)*T4spec_e - μ₄ₑ*T4spec_e
     dT4spec_ni = ν*f*(e*V)/(c₁+V)*s + ((1-ϕ)*(1-p) - p)*ρ₄*V/(c₂+V)*T4spec_ni + k_ν*V/(c₂+V)*T4spec_n - (k₈*δ*T8spec_e + μⁱ₄ₙ)*T4spec_ni
     dT4spec_ei = ϕ*(1-p)*ρ₄*V/(c₂+V)*T4spec_ni + k_ν*V/(c₂+V)*T4spec_e - (k₈*δ*T8spec_e + μⁱ₄ₑ)*T4spec_ei
 
@@ -72,7 +72,7 @@ plo = plot(solution, idxs=(0, 11), label="T8 not spec., not eff.")
 savefig(plo, "T8nspec_noteff_.png")
 plo = plot(solution, idxs=(0, 12), label="T8 not spec., eff.")
 savefig(plo, "T8nspec_eff_.png")
-
+=#
 mask = solution[13,:] .>= 1e-8
 uvals = solution[13,:][mask]
 tvals = solution.t[mask]
@@ -97,6 +97,5 @@ tvals = solution.t[mask]
 plo = plot(tvals, uvals, yscale=:log10, label="Virus dynamics")
 savefig(plo, "Virus_log.png")
 
-=#
 
-plo = plot(solution, idxs=(0, ))
+
