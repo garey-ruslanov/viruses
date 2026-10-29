@@ -30,6 +30,12 @@ function rightside!(du, u, params, t)
     dT4n_nsp_i = (1 - ν)*f*e*V/(c₁+V)*s + ((1 - ϕ)*(1 - p) - p)*r₄*T4n_nsp_i + k_ν*V/(c₂+V)*T4n_nsp - (k₈*δ*T8e_spc + μⁱ₄ₙ)*T4n_nsp_i
     dT4e_nsp_i = ϕ*(1 - p)*r₄*T4n_nsp_i + k_ν*V/(c₂+V)*T4e_nsp - (k₈*δ*T8e_spc)*T4e_nsp_i
 
+    dT8n_spc = ν*(1 - f)*s + (1 - ϕ)*R*T8n_spc - μ₈ₙ*T8n_spc
+    dT8e_spc = ϕ*R*T8n_spc - μ₈ₑ*T8e_spc
+    
+    dT8n_nsp = (1 - ν)*(1 - f)*s + (1 - ϕ)*r₈*T8n*nsp - μ₈ₙ*T8n_nsp
+    dT8e_nsp = ϕ*r₈*T8n_nsp - μ₈ₑ*T8e_nsp
+
     dT_ii = p*(r₄*T4n_nsp_i + ρ₄*V/(c₂+V)*T4n_spc_i) - (k₈*T8e_spc + μii)*T_ii
     dS_ab = ρAb*(T4e_spc + T4e_spc_i)*V/(c₂+V) - k_Ab*V*S_ab - μAb*S_ab
     dM_i = k_νm*V/(c₂+V) * (M - M_i) - (k₈*δ*T8e_spc + μM)*M_i
@@ -46,12 +52,14 @@ A, ν, f, e_bar, s_bar, ϕ, c₁, c₂, k_ν_bar = 36, 1e-3, 0.524, 0.064, 6.09,
 r₄, r₈, M, N = 0.0097, 0.0091, 360, 850
 =#
 
-
+c₂ = 1000.0
+c₁ = 616.6
+δ = 0.001
+e = 0.064
+f = 0.524
 
 params = A, ν, f, e_bar, s_bar, ϕ, c₁, c₂, k_ν_bar, 
           ρ₄, ρ₈, ρAb, k₈, k_m, k_νm_bar, 
           μ₄ₙ, μ₄ₑ, μ₈ₙ, μ₈ₑ, μii, μM, μV, μAb, k_Ab_bar, 
           p, pᵢₘ, r₄, r₈, M, N
 
-
-          
