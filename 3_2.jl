@@ -20,7 +20,15 @@ function rightside!(du, u, params, t)
     k_νm = k_νm_bar * (1 + t/t3)  # *(t+t1)/(t+t2)
     k_Ab = k_Ab_bar * (1 + t/t3)*(t+t1)/(t+t2)
     
-    dT4n_spc = 
+    dT4n_spc = ν*f*(1 - e*V/(c₁+V))*s + (1 - ϕ)*ρ₄*V/(c₂+V)*T4n_spc - k_ν*V/(c₂+V)*T4n_spc - μ₄ₙ*T4n_spc
+    dT4e_spc = ϕ*ρ₄*V/(c₂+V)*T4n_spc - k_ν*V/(c₂+V)*T4e_spc - μ₄ₑ*T4e_spc
+    dT4n_spc_i = ν*f*e*V/(c₁+V)*s + ((1 - ϕ)*(1 - p) - p)*ρ₄*V/(c₂+V)*T4n_spc_i + k_ν*V/(c₂+V)*T4n_spc - (k₈*δ*T8e_spc + μⁱ₄ₙ)*T4n_spc_i
+    dT4e_spc_i = ϕ*(1 - p)*ρ₄*V/(c₂+V)*T4n_spc_i + k_ν*V/(c₂+V)*T4e_spc - (k₈*δ*T8e_spc + μⁱ₄ₑ)*T4e_spc_i
+
+    dT4n_nsp = (1 - ν)*f*(1 - e*V/(c₁+V))*s + (1 - ϕ)*r₄*T4n_nsp - k_ν*V/(c₂+V)*T4n_nsp - μ₄ₙ*T4n_nsp
+    dT4e_nsp = ϕ*r₄*T4n_nsp - k_ν*V/(c₂+V)*T4e_nsp - μ₄ₑ*T4e_nsp
+    dT4n_nsp_i = (1 - ν)*f*e*V/(c₁+V)*s + ((1 - ϕ)*(1 - p) - p)*r₄*T4n_nsp_i + k_ν*V/(c₂+V)*T4n_nsp - (k₈*δ*T8e_spc + μⁱ₄ₙ)*T4n_nsp_i
+    dT4e_nsp_i = ϕ*(1 - p)*r₄*T4n_nsp_i + k_ν*V/(c₂+V)*T4e_nsp - (k₈*δ*T8e_spc)*T4e_nsp_i
 
     dT_ii = p*(r₄*T4n_nsp_i + ρ₄*V/(c₂+V)*T4n_spc_i) - (k₈*T8e_spc + μii)*T_ii
     dS_ab = ρAb*(T4e_spc + T4e_spc_i)*V/(c₂+V) - k_Ab*V*S_ab - μAb*S_ab
