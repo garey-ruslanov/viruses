@@ -11,7 +11,6 @@ function rightside!(du, u, params, t)
     aM = 0.03
     μⁱ₄ₑ = μ₄ₑ
     μⁱ₄ₙ = μ₄ₙ
-    δ = 0.01
 
     R = ρ₈*(T_ii + δ*(T4n_nsp_i + T4n_spc_i + T4e_nsp_i + T4e_spc_i + aT/aM * M_i))
     s = s_bar * ((100.0 - A - t/365.0)/100.0)^1.8
@@ -29,14 +28,14 @@ function rightside!(du, u, params, t)
     dT4n_nsp = (1 - ν)*f*(1 - e*V/(c₁+V))*s + (1 - ϕ)*r₄*T4n_nsp - k_ν*V/(c₂+V)*T4n_nsp - μ₄ₙ*T4n_nsp
     dT4e_nsp = ϕ*r₄*T4n_nsp - k_ν*V/(c₂+V)*T4e_nsp - μ₄ₑ*T4e_nsp
     dT4n_nsp_i = (1 - ν)*f*e*V/(c₁+V)*s + ((1 - ϕ)*(1 - p) - p)*r₄*T4n_nsp_i + k_ν*V/(c₂+V)*T4n_nsp - (k₈*δ*T8e_spc + μⁱ₄ₙ)*T4n_nsp_i
-    dT4e_nsp_i = ϕ*(1 - p)*r₄*T4n_nsp_i + k_ν*V/(c₂+V)*T4e_nsp - (k₈*δ*T8e_spc)*T4e_nsp_i
+    dT4e_nsp_i = ϕ*(1 - p)*r₄*T4n_nsp_i + k_ν*V/(c₂+V)*T4e_nsp - (k₈*δ*T8e_spc + μⁱ₄ₑ)*T4e_nsp_i
 
     # not independent from above, is dependent from R
     dT8n_spc = ν*(1 - f)*s + (1 - ϕ)*R*T8n_spc - μ₈ₙ*T8n_spc
     dT8e_spc = ϕ*R*T8n_spc - μ₈ₑ*T8e_spc
 
     # not used anywhere
-    dT8n_nsp = (1 - ν)*(1 - f)*s + (1 - ϕ)*r₈*T8n*nsp - μ₈ₙ*T8n_nsp  # can be omitted
+    dT8n_nsp = (1 - ν)*(1 - f)*s + (1 - ϕ)*r₈*T8n_nsp - μ₈ₙ*T8n_nsp  # can be omitted
     dT8e_nsp = ϕ*r₈*T8n_nsp - μ₈ₑ*T8e_nsp  # can be omitted
 
     dT_ii = p*(r₄*T4n_nsp_i + ρ₄*V/(c₂+V)*T4n_spc_i) - (k₈*T8e_spc + μii)*T_ii
@@ -48,17 +47,12 @@ function rightside!(du, u, params, t)
 
 end
 
-#=
-A, ν, f, e_bar, s_bar, ϕ, c₁, c₂, k_ν_bar = 36, 1e-3, 0.524, 0.064, 6.09, 0.64, 616.6, 1000.0, 0.065
-ρ₄, ρ₈, ρAb, k₈, k_m, k_νm_bar = 1.98, 0.36, 155.0, 2.5, 60, 1.19
-μ₄ₙ, μ₄ₑ, μ₈ₙ, μ₈ₑ, μii, μM, μV, μAb, k_Ab_bar, p, pᵢₘ = 0.005, 0.015, 0.006, 0.018, 0.470, 0.087, 3.0, 0.023, 0.0001, 0.03, 34.0
-r₄, r₈, M, N = 0.0097, 0.0091, 360, 850
-=#
+
 
 c₂ = 1000.0
 c₁ = 616.6
 δ = 0.001
-e = 0.064
+e_bar = 0.064
 f = 0.524
 k₈ = 2.5
 k_m = 60
@@ -87,8 +81,47 @@ r₈ = 0.0091
 s_bar = 6.09
 τ = 7
 
+k_Ab_bar = 0.0001  # ???96
+
 
 params = A, ν, f, e_bar, s_bar, ϕ, c₁, c₂, k_ν_bar, ρ₄, ρ₈, ρAb, k₈, k_m, k_νm_bar, μ₄ₙ, μ₄ₑ, μ₈ₙ, μ₈ₑ, μii, μM, μV, μAb, k_Ab_bar, p, pᵢₘ, r₄, r₈, M, N
 
 T4n_spc0, T4e_spc0, T4n_spc_i0, T4e_spc_i0, T4n_nsp0, T4e_nsp0, T4n_nsp_i0, T4e_nsp_i0, T_ii0, T8n_spc0, T8e_spc0, T8n_nsp0, T8e_nsp0, S_ab0, M_i0, V0 = 0.92, 0.0, 0.0, 0.0, 920.0, 379.0, 0.0, 0.0, 0.0, 0.47, 0.0, 467.0, 150.0, 0.0, 0.0, 3.0
+
+u0 = [T4n_spc0, T4e_spc0, T4n_spc_i0, T4e_spc_i0, T4n_nsp0, T4e_nsp0, T4n_nsp_i0, T4e_nsp_i0, T8n_spc0, T8e_spc0, T8n_nsp0, T8e_nsp0, T_ii0, S_ab0, M_i0, V0]
+timespan = (0, 1000)
+
+println("initialized")
+problem = ODEProblem(rightside!, u0, timespan, params)
+println("problem object initialized")
+solution = solve(problem, Rodas5(), reltol=1e-8, abstol=1e-10)
+println("solution obtained")
+
+ind = 9
+mask = solution[ind,:] .> 1e-6
+tval = solution.t[mask]
+uval = solution[ind,:][mask]
+plo = plot(tval, uval, yscale=:log10, label="T active infected")
+savefig(plo, "T_activeinfected_log_second.png")
+
+ind = 16
+mask = solution[ind,:] .> 1e-6
+tval = solution.t[mask]
+uval = solution[ind,:][mask]
+plo = plot(tval, uval, yscale=:log10, label="Viral load")
+savefig(plo, "Virus_log_second.png")
+
+ind = 11
+mask = solution[ind,:] .> 1e-6
+tval = solution.t[mask]
+uval = solution[ind,:][mask]
+plo = plot(tval, uval, label="asdfg")
+savefig(plo, "T8n_nonspec_second.png")
+
+ind = 12
+mask = solution[ind,:] .> 1e-6
+tval = solution.t[mask]
+uval = solution[ind,:][mask]
+plo = plot(tval, uval, label="dghj")
+savefig(plo, "T8e_nonspec_second.png")
 
