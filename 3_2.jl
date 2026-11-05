@@ -12,7 +12,7 @@ function rightside!(du, u, params, t)
     μⁱ₄ₑ = μ₄ₑ
     μⁱ₄ₙ = μ₄ₙ
 
-    R = ρ₈*(T_ii + δ*(T4n_nsp_i + T4n_spc_i + T4e_nsp_i + T4e_spc_i + aT/aM * M_i))
+    R = ρ₈*(T_ii + 0.0001*(T4n_nsp_i + T4n_spc_i + T4e_nsp_i + T4e_spc_i + aT/aM * M_i))
     s = s_bar * ((100.0 - A - t/365.0)/100.0)^1.8
     k_ν = k_ν_bar * (1 + t/t3)*(t+t1)/(t+t2)
     e = e_bar * (1 + t/t3)*(t+t1)/(t+t2)
@@ -81,7 +81,7 @@ r₈ = 0.0091
 s_bar = 6.09
 τ = 7
 
-k_Ab_bar = 0.0001  # ???96
+k_Ab_bar = 0.0001
 
 
 params = A, ν, f, e_bar, s_bar, ϕ, c₁, c₂, k_ν_bar, ρ₄, ρ₈, ρAb, k₈, k_m, k_νm_bar, μ₄ₙ, μ₄ₑ, μ₈ₙ, μ₈ₑ, μii, μM, μV, μAb, k_Ab_bar, p, pᵢₘ, r₄, r₈, M, N
@@ -97,7 +97,7 @@ println("problem object initialized")
 solution = solve(problem, Rodas5(), reltol=1e-8, abstol=1e-10)
 println("solution obtained")
 
-ind = 9
+ind = 13
 mask = solution[ind,:] .> 1e-6
 tval = solution.t[mask]
 uval = solution[ind,:][mask]
@@ -111,17 +111,17 @@ uval = solution[ind,:][mask]
 plo = plot(tval, uval, yscale=:log10, label="Viral load")
 savefig(plo, "Virus_log_second.png")
 
-ind = 11
+ind = 9
 mask = solution[ind,:] .> 1e-6
 tval = solution.t[mask]
 uval = solution[ind,:][mask]
 plo = plot(tval, uval, label="asdfg")
-savefig(plo, "T8n_nonspec_second.png")
+savefig(plo, "T8n_spec_second.png")
 
-ind = 12
+ind = 10
 mask = solution[ind,:] .> 1e-6
 tval = solution.t[mask]
 uval = solution[ind,:][mask]
 plo = plot(tval, uval, label="dghj")
-savefig(plo, "T8e_nonspec_second.png")
+savefig(plo, "T8e_spec_second.png")
 

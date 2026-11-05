@@ -6,3 +6,28 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC5226712 - pone.0167640.s001.pdf
 
 
 https://pmc.ncbi.nlm.nih.gov/articles/PMC7925667 очень важный пример метаанализа
+
+Вирусная нагрузка
+CD4 T клетки эффекторные
+CD4 T клетки неэффекторные (хелперы)
+Макрофаги
+Антитела
+
+"Antibodies, Viral/blood"[MeSH]
+"HIV Infections/immunology"[MAJR]
+"CD4-Positive T-Lymphocytes/immunology"[MeSH]
+"Antibodies, Viral/blood"[MAJR] (в чём разница между MeSH и MAJR?)
+"HIV Infections/virology"[MeSH]
+"Humans"[MeSH]
+
+"HIV Antibodies"[Mesh]
+Filters: Randomized Controlled Trial
+
+QWEN:
+# viruses
+("HIV Infections"[MeSH] OR "HIV-1"[MeSH]) AND "Humans"[MeSH] AND ("untreated"[tiab] OR "treatment-naive"[tiab] OR "therapy-naive"[tiab] OR "ART-naive"[tiab] OR "HAART-naive"[tiab] OR "antiretroviral-naive"[tiab]) AND ("Blood"[MeSH] OR "blood"[tiab] OR "plasma"[tiab] OR "PBMC"[tiab]) AND ("Viral Load"[MeSH] OR "viral load"[tiab] OR "HIV RNA"[tiab] OR "viremia"[tiab])
+# Macrophages (note: monocytes turn into macrophages or smth)
+("HIV Infections"[MeSH] OR "HIV-1"[MeSH]) AND "Humans"[MeSH] AND ("untreated"[tiab] OR "treatment-naive"[tiab] OR "therapy-naive"[tiab] OR "ART-naive"[tiab] OR "HAART-naive"[tiab] OR "antiretroviral-naive"[tiab]) AND ("Blood"[MeSH] OR "blood"[tiab] OR "PBMC"[tiab] OR "peripheral blood"[tiab]) AND ("Monocytes"[MeSH] OR "Macrophages"[MeSH] OR "monocyte*"[tiab] OR "macrophage*"[tiab] OR "CD14+"[tiab])
+# CD4+
+("HIV Infections"[MeSH] OR "HIV-1"[MeSH]) AND "Humans"[MeSH] AND ("untreated"[tiab] OR "treatment-naive"[tiab] OR "therapy-naive"[tiab] OR "ART-naive"[tiab] OR "HAART-naive"[tiab] OR "antiretroviral-naive"[tiab]) AND ("Blood"[MeSH] OR "blood"[tiab] OR "plasma"[tiab] OR "PBMC"[tiab]) AND ("CD4-Positive T-Lymphocytes"[MeSH] OR "CD4 Lymphocyte Count"[MeSH] OR "CD4+ T cell*"[tiab] OR "CD4 count*"[tiab])
+
